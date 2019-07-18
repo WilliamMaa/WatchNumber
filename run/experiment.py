@@ -20,7 +20,7 @@ def do(rate, *hiddenNodes):
     recognizer = neurons.NeuronsNetwork(rate, 784, 10, *hiddenNodes)
 
     # training
-    trainSet = open('./dataset/mnist_debug', 'r')
+    trainSet = open('../dataset/mnist_debug', 'r')
     trainCount = 0
     for l in trainSet:
         trainCount += 1
@@ -31,7 +31,7 @@ def do(rate, *hiddenNodes):
     trainSet.close()
 
     # testing
-    testSet = open('./dataset/mnist_debug_test', 'r')
+    testSet = open('../dataset/mnist_debug_test', 'r')
     report = []
     testCount = 0
     correctFirst = correctSecond = correctThird = incorrect = 0
@@ -66,4 +66,3 @@ def do(rate, *hiddenNodes):
     # support.report(recognizer, trainCount, testCount, correctFirst, correctSecond, correctThird, incorrect, True)
 
     return 1.0 * correctFirst / testCount
-

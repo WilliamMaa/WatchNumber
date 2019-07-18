@@ -6,8 +6,8 @@
 import random
 
 def update(inName, outName, num, p = 0.5, ignore = 0):
-    inFile = open("./dataset/" + inName, 'r')
-    outFile = open("./dataset/" + outName, 'w')
+    inFile = open("../dataset/" + inName, 'r')
+    outFile = open("../dataset/" + outName, 'w')
     count = 0
     while count < num:
         line = inFile.readline()

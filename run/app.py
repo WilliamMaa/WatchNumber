@@ -29,10 +29,15 @@ def main(logFile, t, rate, *hiddenNodes):
     print("Run", t, "times with learning rate of", rate, "given the hidden layers as", hiddenNodes, "completed in " + timeSpent + " seconds.")
 
 
-f = open("./experiment.log", 'a')
+f = open("../experiment.log", 'a')
 watch = support.stopwatch()
-# main(f, 20, 0.22, 100, 100)
-# main(f, 20, 0.22, 150, 100)
+
+# main(f, 20, 0.22, 200, 80)
 # main(f, 20, 0.22, 200, 100)
+# main(f, 20, 0.22, 200, 150)
+# main(f, 20, 0.22, 300, 80)
+# main(f, 20, 0.22, 300, 100)
+# main(f, 20, 0.22, 300, 150)
 main(f, 20, 0.22, 150)
+
 f.close()

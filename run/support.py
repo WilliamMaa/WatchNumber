@@ -39,4 +39,3 @@ class stopwatch:
         self.timestamp = time.time()
     def lap(self):
         return time.time() - self.timestamp
-
