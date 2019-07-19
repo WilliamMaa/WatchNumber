@@ -6,3 +6,4 @@
 /venv
 /dataset/mnist_train.csv
 /dataset/mnist_test.csv
+/*.log

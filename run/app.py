@@ -38,7 +38,7 @@ def run(locks, runTimes, trainTimes, rate, *hiddenNodes):
     log += "\nAverage accuracy: " + str(round(100.0 * mean, 3)) + "\nAction takes " + timeSpent + " seconds."
     log += "\n\n"
     locks[0].acquire()
-    with open("./experiment.log", 'a') as f:
+    with open("../experiment.log", 'a') as f:
         f.write(log)
     locks[0].release()
     print("Run", runTimes, "times with learning rate of", rate, "given the hidden layers as", hiddenNodes, "completed in " + timeSpent + " seconds.")
@@ -48,4 +48,3 @@ def test():
     pass
 
 main()
-

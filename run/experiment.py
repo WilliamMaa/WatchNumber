@@ -21,7 +21,7 @@ def do(logLock, rate, *hiddenNodes, loop=1, files=('mnist_train.csv','mnist_test
 
     # training
     trainCount = 0
-    with open('./dataset/' + files[0], 'r') as trainSet:
+    with open('../dataset/' + files[0], 'r') as trainSet:
         watch.reset()
         for t in range(loop):
             for l in trainSet:
@@ -36,7 +36,7 @@ def do(logLock, rate, *hiddenNodes, loop=1, files=('mnist_train.csv','mnist_test
     report = []
     testCount = 0
     correctFirst = correctSecond = correctThird = incorrect = 0
-    with open('./dataset/' + files[1], 'r') as testSet:
+    with open('../dataset/' + files[1], 'r') as testSet:
         watch.reset()
         for l in testSet:
             testCount += 1
@@ -76,4 +76,3 @@ def do(logLock, rate, *hiddenNodes, loop=1, files=('mnist_train.csv','mnist_test
     logLock.release()
 
     return 1.0 * correctFirst / testCount
-
