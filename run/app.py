@@ -4,35 +4,48 @@
 # All rights reserved.
 
 from run import support, experiment
-import time
+import threading
 
-def main(logFile, t, rate, *hiddenNodes):
+def main():
+    # create locks
+    expLogLock = threading.Lock()
+    testLogLock = threading.Lock()
+    fileLocks = (expLogLock, testLogLock)
+    # create thread tasks
+    tasks = []
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 1, 0.1, 300)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 2, 0.1, 300)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 3, 0.1, 300)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 1, 0.1, 300, 50)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 2, 0.1, 300, 50)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 3, 0.1, 300, 50)))
+    # start running tasks
+    for task in tasks:
+        task.start()
+
+def run(locks, runTimes, trainTimes, rate, *hiddenNodes):
     mean = 0
-    logFile.write(support.current())
-    logFile.write("\nTrained for 3000 times and tested for 1000 times.")
-    logFile.write("\nRepeat times: " + str(t))
-    logFile.write("\n    In: 784; Out: 10; ")
-    logFile.write("\n    Learning rate: " + str(rate))
-    logFile.write(";\n    Hidden layers: " + str(hiddenNodes) + ";\nAccuracy: ")
-    watch.reset()
-    for i in range(t):
-        experiment.refresh()
-        accuracy = experiment.do(rate, *hiddenNodes)
-        logFile.write(str(round(accuracy, 2)) + " ")
+    log = support.current()
+    log += "\nTrained for 180000 times and tested for 10000 times.\nRepeat times: " + str(runTimes)
+    log += "\n    In: 784; Out: 10; \n    Learning rate: " + str(rate) + ";\n    Hidden layers: " + str(hiddenNodes) + ";\nAccuracy: "
+    watch = support.stopwatch()
+    for i in range(runTimes):
+        accuracy = experiment.do(locks[1], rate, *hiddenNodes, loop=trainTimes)
+        log += str(round(100.0 * accuracy, 2)) + " "
         mean += accuracy
-    timeSpent = str(round(watch.lap(), 5))
-    mean = 1.0 * mean / t
-    logFile.write("\nAverage accuracy: " + str(round(mean, 3)))
-    logFile.write("\nAction takes " + timeSpent + " seconds.")
-    logFile.write("\n\n")
-    logFile.flush()
-    print("Run", t, "times with learning rate of", rate, "given the hidden layers as", hiddenNodes, "completed in " + timeSpent + " seconds.")
+    timeSpent = str(round(watch.lap(), 3))
+    mean = 1.0 * mean / runTimes
+    log += "\nAverage accuracy: " + str(round(100.0 * mean, 3)) + "\nAction takes " + timeSpent + " seconds."
+    log += "\n\n"
+    locks[0].acquire()
+    with open("./experiment.log", 'a') as f:
+        f.write(log)
+    locks[0].release()
+    print("Run", runTimes, "times with learning rate of", rate, "given the hidden layers as", hiddenNodes, "completed in " + timeSpent + " seconds.")
 
+def test():
+    # experiment.newDataset()
+    pass
 
-f = open("./experiment.log", 'a')
-watch = support.stopwatch()
-# main(f, 20, 0.22, 100, 100)
-# main(f, 20, 0.22, 150, 100)
-# main(f, 20, 0.22, 200, 100)
-main(f, 20, 0.22, 150)
-f.close()
+main()
+

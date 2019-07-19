@@ -3,12 +3,14 @@
 # on June 14, 2018
 # All rights reserved.
 
-import numpy
+import numpy, numba
 import scipy.special as scsp
 
 class NeuronsNetwork:
 
+
     def __init__(self, rate, inputNodes, outputNodes, *hiddenNodes):
+
         self.rate = rate
         self.inputNodes = inputNodes
         self.outputNodes = outputNodes
@@ -22,6 +24,8 @@ class NeuronsNetwork:
         self.who = numpy.random.normal(0.0, pow(self.outputNodes, -0.5), (self.outputNodes, self.hiddenNodes[-1]))
         pass
 
+
+    @numba.jit
     def train(self, i, t):
         inputArr = numpy.array(i, ndmin=2).T
         targetArr = numpy.array(t, ndmin=2).T
@@ -42,6 +46,8 @@ class NeuronsNetwork:
         self.wih += self.rate * numpy.dot((hhe[-1] * m[0] * (1.0 - m[0])), numpy.transpose(inputArr))
         pass
 
+
+    @numba.jit
     def query(self, l):
         # weights
         inputArr = numpy.array(l, ndmin=2).T
@@ -53,5 +59,13 @@ class NeuronsNetwork:
         final = scsp.expit(numpy.dot(self.who, middle))
         return final
 
-    def save(self):
+
+    def save(self, filepath):
+        f = open(filepath, 'w')
         pass
+
+
+def read(filepath):
+    f = open(filepath, 'r')
+    pass
+

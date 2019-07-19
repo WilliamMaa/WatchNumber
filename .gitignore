@@ -1,5 +1,8 @@
+*.pyc
 /.idea
 /__pycache__
+/run/__pycache__
+/dataset/__pycache__
 /venv
 /dataset/mnist_train.csv
 /dataset/mnist_test.csv

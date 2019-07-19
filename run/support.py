@@ -3,32 +3,54 @@
 # on June 14, 2019
 # All rights reserved.
 
-import time
+import time, numpy, pylab, threading
+from matplotlib import pylab, pyplot as plt
 
-def report(obj, trainCount, testCount, correctFirst, correctSecond = -1, correctThird = -1, incorrect = -1, isPercent = False):
-    log = current() + "\nRecognizer:"
+r = threading.Lock()
+
+def report(obj, count, result, timeSpent=(), isPercent=False):
+    log = current()
+    log += "\nTrained for " + str(count[0]) + " images, tested for " + str(count[1]) + " images.\nRecognizer:"
     log += "\n    Learning rate: " + str(obj.rate)
     log += "\n    Input node #:  " + str(obj.inputNodes)
     log += "\n    Hidden layers: " + str(obj.hiddenNodes)
     log += "\n    Output node #: " + str(obj.outputNodes)
-    log += "\nTrained for " + str(trainCount) + " images, tested for " + str(testCount) + " images.\n"
-    log += "Among tested data,\n    " + \
-          (str(100.0 * correctFirst / testCount) + " %" if isPercent else str(correctFirst) + " out of " + str(testCount)) + " are correct.\n"
-    if correctSecond >= 0:
-        log += "    " + (str(100.0 * correctSecond / testCount) + " %" if isPercent else str(correctFirst) + " out of " + str(testCount)) + " are in the second choice.\n"
-        if correctThird >= 0:
-            log += "    " + (str(100.0 * correctSecond / testCount) + " %" if isPercent else str(correctFirst) + " out of " + str(testCount)) + " are in the third choice.\n"
-    if incorrect >= 0:
-        log += "    " + (str(100.0 * incorrect / testCount) + " %" if isPercent else str(incorrect) + " out of " + str(testCount)) + " are not included above.\n"
+    log += "\nAmong tested data,\n    " + (str(round(100.0 * result[0] / count[1], 3)) + " %" if isPercent else str(result[0]) + " out of " + str(count[1])) + " are correct.\n"
+    if len(result) > 1:
+        log += "    " + (str(round(100.0 * result[1] / count[1], 3)) + " %" if isPercent else str(result[1]) + " out of " + str(count[1])) + " are in the second choice.\n"
+        if len(result) > 2:
+            log += "    " + (str(round(100.0 * result[2] / count[1], 3)) + " %" if isPercent else str(result[2]) + " out of " + str(count[1])) + " are in the third choice.\n"
+            if len(result) > 3:
+                log += "    " + (str(round(100.0 * result[3] / count[1], 3)) + " %" if isPercent else str(result[3]) + " out of " + str(count[1])) + " are not included above.\n"
+    if len(timeSpent) == 2:
+        log += "Training took " + str(round(timeSpent[0], 3)) + " seconds, and testing took " + str(round(timeSpent[1], 3)) + " seconds.\n"
     log += "\n"
     print(log)
-    f = open("./test.log", 'a')
-    f.write(log)
-    f.flush()
-    f.close()
+    with open("./test.log", 'a') as f:
+        f.write(log)
 
 def current():
     return time.strftime("%b. %d, %Y %a. %H:%M:%S", time.localtime())
+
+def draw(arr):
+    if len(arr) == 0:
+        return False
+    if len(arr) == 785:
+        arr = arr[1:]
+    side = round(len(arr) ** 0.5)
+    if side * side == len(arr):
+        plt.imshow(numpy.reshape(arr, (side, side)), cmap='gray')
+        return True
+    else:
+        return False
+
+def show(arr):
+    if draw(arr):
+        pylab.show()
+
+# def draw(num, arr):
+#     draw(arr)
+#     pass
 
 class stopwatch:
     # init
