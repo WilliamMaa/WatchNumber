@@ -26,7 +26,7 @@ def report(obj, count, result, timeSpent=(), isPercent=False):
         log += "Training took " + str(round(timeSpent[0], 3)) + " seconds, and testing took " + str(round(timeSpent[1], 3)) + " seconds.\n"
     log += "\n"
     print(log)
-    with open("./test.log", 'a') as f:
+    with open("../test.log", 'a') as f:
         f.write(log)
 
 def current():

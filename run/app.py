@@ -13,15 +13,17 @@ def main():
     fileLocks = (expLogLock, testLogLock)
     # create thread tasks
     tasks = []
-    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 1, 0.1, 300)))
-    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 2, 0.1, 300)))
-    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 3, 0.1, 300)))
     tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 1, 0.1, 300, 50)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 1, 0.1, 300)))
     tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 2, 0.1, 300, 50)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 2, 0.1, 300)))
     tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 3, 0.1, 300, 50)))
+    tasks.append(threading.Thread(target=run, args=(fileLocks, 3, 3, 0.1, 300)))
     # start running tasks
-    for task in tasks:
-        task.start()
+    for i in range(len(tasks)):
+        tasks[i].start()
+        if i % 2 == 1:
+            tasks[i].join()
 
 def run(locks, runTimes, trainTimes, rate, *hiddenNodes):
     mean = 0
